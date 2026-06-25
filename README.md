@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="../assets/jatri-icon.svg" alt="Jatri" width="72" />
+  <img src="./public/assets/jatri-icon.svg" alt="Jatri" width="72" />
   <h1>Jatri — Client</h1>
   <p><em>Next.js 15 · React 19 · TypeScript · Tailwind CSS</em></p>
 </div>
