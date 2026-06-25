@@ -1,17 +1,16 @@
 import Link from 'next/link';
-import { Bus, Mail, Phone, Facebook, CreditCard } from 'lucide-react';
+import { Mail, Phone, Facebook, CreditCard } from 'lucide-react';
+import Image from 'next/image';
 
 export function Footer() {
   return (
     <footer id="main-footer" className="mt-16 border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div>
-          <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
-              <Bus size={20} />
-            </span>
-            <span className="text-lg font-bold text-slate-900 dark:text-white">TicketCutter</span>
-          </Link>
+          <Link id="navbar-logo" href="/" className="flex items-center gap-2">
+          <Image src="/favicon.png" alt="Jatri" width={28} height={28} className="rounded-md" />
+          <span className="text-xl font-bold text-slate-900 dark:text-white">Jatri</span>
+        </Link>
           <p className="mt-3 text-sm text-slate-600 dark:text-slate-400">
             Book bus, train, launch &amp; flight tickets easily across Bangladesh.
           </p>
@@ -30,9 +29,9 @@ export function Footer() {
         <div>
           <h4 className="mb-3 text-sm font-semibold text-slate-900 dark:text-white">Contact Info</h4>
           <ul className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-            <li className="flex items-center gap-2"><Mail size={15} /> support@ticketcutter.com</li>
+            <li className="flex items-center gap-2"><Mail size={15} /> support@jatri.com</li>
             <li className="flex items-center gap-2"><Phone size={15} /> +880 1700-000000</li>
-            <li className="flex items-center gap-2"><Facebook size={15} /> /ticketcutterbd</li>
+            <li className="flex items-center gap-2"><Facebook size={15} /> /jatribd</li>
           </ul>
         </div>
 
@@ -44,7 +43,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-slate-200 py-4 text-center text-sm text-slate-500 dark:border-slate-800">
-        &copy; 2025 TicketCutter. All rights reserved.
+        &copy; 2025 Jatri. All rights reserved.
       </div>
     </footer>
   );

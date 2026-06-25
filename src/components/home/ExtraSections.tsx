@@ -42,7 +42,7 @@ export function WhyChooseUs() {
   return (
     <section id="why-choose-us" className="bg-slate-100 py-12 dark:bg-slate-900">
       <div className="container-page">
-        <h2 className="section-heading">Why Choose TicketCutter?</h2>
+        <h2 className="section-heading">Why Choose Jatri?</h2>
         <p className="mt-2 text-slate-600 dark:text-slate-400">Everything you need for a smooth booking experience.</p>
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (

@@ -16,7 +16,7 @@ export default function ContactPage() {
             Have a question about your booking? Reach out and our team will get back to you.
           </p>
           <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
-            <Mail className="text-brand-500" size={18} /> support@ticketcutter.com
+            <Mail className="text-brand-500" size={18} /> support@jatri.com
           </div>
           <div className="flex items-center gap-3 text-slate-700 dark:text-slate-300">
             <Phone className="text-brand-500" size={18} /> +880 1700-000000

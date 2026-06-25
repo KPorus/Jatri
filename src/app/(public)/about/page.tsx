@@ -1,9 +1,9 @@
 export default function AboutPage() {
   return (
     <div id="about-page" className="container-page py-16">
-      <h1 className="section-heading">About TicketCutter</h1>
+      <h1 className="section-heading">About Jatri</h1>
       <p className="mt-4 max-w-3xl text-slate-600 dark:text-slate-400">
-        TicketCutter is a modern online ticket booking platform for Bangladesh. We bring bus, train, launch, and flight
+        Jatri is a modern online ticket booking platform for Bangladesh. We bring bus, train, launch, and flight
         operators onto a single platform with real-time seat selection so you always know exactly where you will sit.
         Seats are locked the moment you pick them and held for five minutes while you complete a secure Stripe payment.
       </p>

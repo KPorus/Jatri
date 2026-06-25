@@ -6,7 +6,7 @@ import { Providers } from '@/components/providers/Providers';
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
 export const metadata: Metadata = {
-  title: 'TicketCutter - Book Travel Tickets in Bangladesh',
+  title: 'Jatri - Book Travel Tickets in Bangladesh',
   description: 'Book bus, train, launch & flight tickets easily across Bangladesh with live seat selection.',
 };
 
