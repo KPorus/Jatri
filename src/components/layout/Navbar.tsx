@@ -3,10 +3,11 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Bus, Menu, X, LayoutDashboard, LogOut, User as UserIcon } from 'lucide-react';
+import { Menu, X, LayoutDashboard, LogOut, User as UserIcon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './ThemeToggle';
+import Image from 'next/image';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -33,10 +34,8 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link id="navbar-logo" href="/" className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-600 text-white">
-            <Bus size={20} />
-          </span>
-          <span className="text-xl font-bold text-slate-900 dark:text-white">TicketCutter</span>
+          <Image src="/favicon.png" alt="Jatri" width={28} height={28} className="rounded-md" />
+          <span className="text-xl font-bold text-slate-900 dark:text-white">Jatri</span>
         </Link>
 
         <div className="hidden items-center gap-1 md:flex">
