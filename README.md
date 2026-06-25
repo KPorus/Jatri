@@ -7,8 +7,8 @@
 The Jatri frontend: a Next.js App Router app with a **live seat map**, role-aware dashboards, search &
 discovery, and a Stripe-redirect checkout flow.
 
-> Part of the **Jatri** monorepo — see the root [`README.md`](../README.md) and
-> [`docs/ARCHITECTURE.md`](../docs/ARCHITECTURE.md) for system diagrams.
+> Part of the **Jatri** monorepo — see the root [`README.md`](https://github.com/KPorus/Jatri/tree/master/README.md) and
+> [`docs/ARCHITECTURE.md`](https://github.com/KPorus/Jatri/tree/master/docs) for system diagrams.
 
 ---
 
