@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { getSocket } from '@/lib/socket';
 import { getGuestId } from '@/lib/guest';
+import { saveHold, loadHold, clearHold } from '@/lib/seatHold';
 import { cn } from '@/lib/utils';
 import type { Seat, SeatLayout } from '@/lib/types';
 
@@ -17,10 +18,18 @@ interface SeatMapProps {
 
 type StatusMap = Record<string, 'available' | 'held' | 'booked'>;
 
+const HOLD_TTL_MS = 5 * 60 * 1000;
+
 export function SeatMap({ tripId, seats, layout, disabled, onSelectionChange }: SeatMapProps) {
   const [statuses, setStatuses] = useState<StatusMap>({});
   const [selected, setSelected] = useState<string[]>([]);
   const holderId = useMemo(() => getGuestId(), []);
+
+  // Keep a ref of the current selection so socket handlers never treat our own seats as taken.
+  const selectedRef = useRef<string[]>([]);
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
   // Build the seat number -> grid arrangement from layout, keeping the same labels the server generates.
   const grid = useMemo(() => {
@@ -36,20 +45,51 @@ export function SeatMap({ tripId, seats, layout, disabled, onSelectionChange }: 
     const initial: StatusMap = {};
     seats.forEach((s) => (initial[s.seatNumber] = s.status));
     setStatuses(initial);
-  }, [seats]);
+
+    // Restore the viewer's own active holds. The server `mine` flag is authoritative; the
+    // localStorage cache only survives entries the server still confirms as ours.
+    const cached = loadHold(tripId);
+    const restored = Array.from(new Set([...seats.filter((s) => s.mine).map((s) => s.seatNumber), ...cached])).filter(
+      (sn) => seats.find((s) => s.seatNumber === sn)?.mine
+    );
+
+    if (restored.length) {
+      setSelected(restored);
+      setStatuses((prev) => {
+        const next = { ...prev };
+        restored.forEach((sn) => (next[sn] = 'held'));
+        return next;
+      });
+      saveHold(tripId, restored, Date.now() + HOLD_TTL_MS);
+      // Refresh the 5-minute hold window so a returning user gets a fresh chance to pay.
+      const socket = getSocket();
+      restored.forEach((sn) => socket.emit('seat:select', { tripId, seatNumber: sn, holderId }));
+    } else {
+      clearHold(tripId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [seats, tripId, holderId]);
 
   useEffect(() => {
     const socket = getSocket();
     socket.emit('trip:join', tripId);
 
-    const onLocked = (p: { seatNumber: string; holderId: string }) => {
-      if (p.holderId === holderId) return;
-      setStatuses((prev) => ({ ...prev, [p.seatNumber]: 'held' }));
+    const onLocked = (p: { seatNumber?: string; seatNumbers?: string[] }) => {
+      const nums = p.seatNumbers ?? (p.seatNumber ? [p.seatNumber] : []);
+      setStatuses((prev) => {
+        const next = { ...prev };
+        nums.forEach((sn) => {
+          if (!selectedRef.current.includes(sn)) next[sn] = 'held';
+        });
+        return next;
+      });
     };
     const onReleased = (p: { seatNumbers: string[] }) => {
       setStatuses((prev) => {
         const next = { ...prev };
-        p.seatNumbers.forEach((s) => (next[s] = 'available'));
+        p.seatNumbers.forEach((s) => {
+          if (!selectedRef.current.includes(s)) next[s] = 'available';
+        });
         return next;
       });
     };
@@ -59,7 +99,12 @@ export function SeatMap({ tripId, seats, layout, disabled, onSelectionChange }: 
         p.seatNumbers.forEach((s) => (next[s] = 'booked'));
         return next;
       });
-      setSelected((prev) => prev.filter((s) => !p.seatNumbers.includes(s)));
+      setSelected((prev) => {
+        const remaining = prev.filter((s) => !p.seatNumbers.includes(s));
+        if (remaining.length) saveHold(tripId, remaining, Date.now() + HOLD_TTL_MS);
+        else clearHold(tripId);
+        return remaining;
+      });
     };
     const onUnavailable = (p: { seatNumber: string; message: string }) => {
       toast.error(p.message);
@@ -83,7 +128,8 @@ export function SeatMap({ tripId, seats, layout, disabled, onSelectionChange }: 
 
   useEffect(() => {
     onSelectionChange(selected);
-  }, [selected, onSelectionChange]);
+    if (selected.length) saveHold(tripId, selected, Date.now() + HOLD_TTL_MS);
+  }, [selected, onSelectionChange, tripId]);
 
   const toggleSeat = (seatNumber: string) => {
     if (disabled) return;
@@ -143,7 +189,11 @@ export function SeatMap({ tripId, seats, layout, disabled, onSelectionChange }: 
                   <button
                     id={`seat-${seatNumber}`}
                     onClick={() => toggleSeat(seatNumber)}
-                    disabled={disabled || statuses[seatNumber] === 'booked' || statuses[seatNumber] === 'held'}
+                    disabled={
+                      disabled ||
+                      (!selected.includes(seatNumber) &&
+                        (statuses[seatNumber] === 'booked' || statuses[seatNumber] === 'held'))
+                    }
                     className={cn(
                       'h-9 w-9 rounded-md border text-xs font-medium transition',
                       seatClass(seatNumber)

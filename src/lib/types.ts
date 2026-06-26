@@ -59,6 +59,8 @@ export interface Seat {
   seatNumber: string;
   status: SeatStatus;
   holdExpiresAt?: string | null;
+  // True when this seat is currently held by the requesting viewer (guest or logged-in user).
+  mine?: boolean;
 }
 
 export interface Booking {

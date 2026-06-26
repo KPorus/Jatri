@@ -32,8 +32,10 @@ export default function TripDetailsPage() {
   const [paying, setPaying] = useState(false);
 
   useEffect(() => {
+    // Send the browser guestId so the server can flag seats this viewer already holds.
+    // The JWT (for logged-in users) is attached automatically by the api interceptor.
     api
-      .get(`/trips/${id}`)
+      .get(`/trips/${id}`, { params: { holderId: getGuestId() } })
       .then(({ data }) => {
         setTrip(data.trip);
         setSeats(data.seats);
