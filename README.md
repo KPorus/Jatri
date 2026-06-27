@@ -9,6 +9,7 @@ discovery, and a Stripe-redirect checkout flow.
 
 > Part of the **Jatri** monorepo — see the root [`README.md`](https://github.com/KPorus/Jatri/tree/master/README.md) and
 > [`docs/ARCHITECTURE.md`](https://github.com/KPorus/Jatri/tree/master/docs) for system diagrams.
+Backend repo [`Jatri backend`](https://github.com/KPorus/Jatri-backend)
 
 ---
 
